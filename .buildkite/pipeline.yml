@@ -1,3 +1,7 @@
 steps:
   - label: Build
-    command: stack build
+    commands:
+      - stack build
+    plugins:
+      - docker#v3.3.0:
+          image: "haskell:8.6.5"
