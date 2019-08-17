@@ -1,4 +1,4 @@
-resolver: lts-14.1
+resolver: lts-14.0
 packages:
 - api
 extra-deps:
