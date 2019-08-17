@@ -5,3 +5,4 @@ steps:
     plugins:
       - docker#v3.3.0:
           image: "haskell:8.6.5"
+          mount-buildkite-agent: false
