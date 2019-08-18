@@ -13,8 +13,10 @@ createMailbox :: ActionM ()
 createMailbox = liftIO mailbox >>= json
 
 mailbox :: IO Mailbox
-mailbox = threadDelay 1_000_000
+mailbox = dubiousDosPreventionAttempt
        >> Mailbox <$> getNewMailboxId <*> getCurrentTime
+  where
+  dubiousDosPreventionAttempt = threadDelay 1_000_000
 
 getNewMailboxId :: IO Text
 getNewMailboxId = toText <$> nextRandom
