@@ -14,7 +14,7 @@ spec =
     it "responds with usage" $ do
       apiUrl <- Env.apiURL
       infoPageUrl <- Env.infoPageURL
-      get "/" `shouldRespondWith` (usage apiUrl infoPageUrl)
+      get "/" `shouldRespondWith` usage apiUrl infoPageUrl
     it "has 'Content-Type: text/plain; charset=utf-8'" $
       get "/" `shouldRespondWith` 200 {matchHeaders = ["Content-Type" <:> "text/plain; charset=utf-8"]}
 

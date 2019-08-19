@@ -24,12 +24,12 @@ spec :: SpecWith Application
 spec = do
   withFeatureToggleOn "FEATURE_NO_DELAY" $ describe "GET /receive" $ do
     it "responds with empty emails for unknown mailbox id" $
-      get "/receive/unknown-mailbox-id" `shouldRespondWith` (jsonEmailsForReceive [])
+      get "/receive/unknown-mailbox-id" `shouldRespondWith` jsonEmailsForReceive []
     it "responds with an email when it arrives in the mailbox" $ do
       pendingWith "Waiting for a proper implementation"
       (mailboxId, mailboxAddress) <- createMailbox
       sendEmail (testEmailTo mailboxAddress)
-      get [i|/receive/#{mailboxId}|] `shouldRespondWith` (jsonEmailsForReceive [(mailboxAddress, "Body of a test email")])
+      get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive [(mailboxAddress, "Body of a test email")]
   describe "GET /receive" $
     it "responds with a delay waiting for an email to arrive" $ do
       timeStart <- liftIO getCurrentTime
