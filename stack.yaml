@@ -1,6 +1,6 @@
 resolver: lts-14.0
 packages:
-- api
+- .
 extra-deps:
   - scotty-tls-0.4.1
   - string-convert-4.0.0.1

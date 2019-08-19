@@ -1,0 +1,133 @@
+name:                api-unverified-email
+version:             0.1.0.0
+homepage:            https://github.com/ptek/unverified.email
+license:             AGPL
+license-file:        LICENSE
+author:              Pavlo Kerestey
+maintainer:          pavlo {at} kerestey.net
+copyright:           2019 Pavlo Kerestey
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:
+      src
+  exposed-modules:
+      Action.Create
+    , Action.Receive
+    , Action.Usage
+    , Dispatcher
+    , Controller.Mailbox
+    , Model.Mailbox
+    , Model.Email
+    , Env
+  build-depends:
+      aeson
+    , base >= 4.7 && < 5
+    , envy
+    , load-env
+    , protolude
+    , retry
+    , scotty
+    , scotty-tls
+    , string-convert
+    , string-interpolate
+    , text
+    , time
+    , iso8601-time
+    , uuid
+    , wai
+  default-extensions:
+      DeriveFoldable
+    , DeriveFunctor
+    , DeriveGeneric
+    , DeriveTraversable
+    , GeneralizedNewtypeDeriving
+    , LambdaCase
+    , MultiWayIf
+    , NamedFieldPuns
+    , NoImplicitPrelude
+    , NumericUnderscores
+    , OverloadedLists
+    , OverloadedStrings
+    , RecordWildCards
+    , ScopedTypeVariables
+    , TupleSections
+    , ViewPatterns
+  ghc-options:
+      -Wall -j
+  default-language:
+      Haskell2010
+
+executable api-unverified-email-exe
+  hs-source-dirs:
+      app
+  main-is:
+      Main.hs
+  ghc-options:
+      -Wall -Werror -threaded -O2 -rtsopts -with-rtsopts=-N -j
+  build-depends:
+      base
+    , api-unverified-email
+  default-language:
+      Haskell2010
+
+test-suite api-unverified-email-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Test.hs
+  other-modules:
+      Test.Hspec.Wai.ValueMatchers
+    , Test.Hspec.Wai.FeatureToggle
+    , Controller.CreateTest
+    , Controller.UsageTest
+    , Controller.ReceiveTest
+  build-depends:
+      api-unverified-email
+    , aeson
+    , base
+    , lifted-base
+    , directory
+    , envy
+    , hspec
+    , hspec-core
+    , hspec-expectations-lifted
+    , hspec-wai
+    , hspec-wai-json
+    , http-types
+    , load-env
+    , microlens
+    , microlens-aeson
+    , monad-control
+    , string-convert
+    , string-interpolate
+    , text
+    , time
+    , uuid
+    , wai
+    , wai-extra
+  default-extensions:
+      OverloadedStrings
+    , TupleSections
+    , LambdaCase
+    , MultiWayIf
+    , NumericUnderscores
+    , OverloadedLists
+    , ViewPatterns
+    , ScopedTypeVariables
+    , RecordWildCards
+    , NamedFieldPuns
+    , GeneralizedNewtypeDeriving
+    , DeriveFunctor
+    , DeriveFoldable
+    , DeriveTraversable
+    , DeriveGeneric
+    , QuasiQuotes
+  ghc-options:         -Wall -threaded -O2 -rtsopts -with-rtsopts=-N -fno-cse
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/ptek/unverified.email

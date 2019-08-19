@@ -3,10 +3,11 @@ module Model.Email where
 import Data.Aeson
 import Data.Text
 import GHC.Generics
+import Protolude
 
 data Email = Email {
-    to :: Text
-  , from :: Text
+    addressTo :: Text
+  , addressFrom :: Text
   , subject :: Text
   , textBody :: Maybe Text
   , htmlBody :: Maybe Text

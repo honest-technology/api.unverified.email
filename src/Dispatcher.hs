@@ -5,6 +5,9 @@ module Dispatcher (
 
 import Network.Wai (Application)
 import Web.Scotty (ScottyM, scottyApp, scotty)
+import Protolude
+import qualified Env
+import LoadEnv
 
 import qualified Controller.Mailbox
 
@@ -15,4 +18,7 @@ testableApp :: IO Application
 testableApp = scottyApp app'
 
 runnableApp :: IO ()
-runnableApp = scotty 8080 app'
+runnableApp = do
+  loadEnv
+  port <- Env.port
+  scotty (fromIntegral port) app'
