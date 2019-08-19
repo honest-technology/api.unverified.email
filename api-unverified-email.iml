@@ -157,7 +157,6 @@
     <orderEntry type="library" name="load-env-0.2.1.0" level="project" />
     <orderEntry type="library" name="envy-2.0.0.0" level="project" />
     <orderEntry type="library" name="retry-0.8.0.1" level="project" />
-    <orderEntry type="library" name="lifted-base-0.2.3.12" level="project" />
     <orderEntry type="library" name="hspec-expectations-lifted-0.10.0" level="project" />
   </component>
 </module>

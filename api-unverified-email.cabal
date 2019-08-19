@@ -88,9 +88,7 @@ test-suite api-unverified-email-test
       api-unverified-email
     , aeson
     , base
-    , lifted-base
     , directory
-    , envy
     , hspec
     , hspec-core
     , hspec-expectations-lifted
@@ -100,7 +98,6 @@ test-suite api-unverified-email-test
     , load-env
     , microlens
     , microlens-aeson
-    , monad-control
     , string-convert
     , string-interpolate
     , text
