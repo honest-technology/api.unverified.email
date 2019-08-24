@@ -9,7 +9,6 @@ RUN adduser -D -H unverified && \
     mkdir -p /mailbox/unverified && \
     chown unverified:unverified /mailbox/unverified
 
-
 COPY ./smtpd.conf /etc/smtpd
 
 EXPOSE 25

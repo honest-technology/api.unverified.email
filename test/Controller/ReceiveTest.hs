@@ -26,10 +26,10 @@ spec = do
     it "responds with empty emails for unknown mailbox id" $
       get "/receive/unknown-mailbox-id" `shouldRespondWith` jsonEmailsForReceive []
     it "responds with an email when it arrives in the mailbox" $ do
-      pendingWith "Waiting for a proper implementation"
       (mailboxId, mailboxAddress) <- createMailbox
-      sendEmail (testEmailTo mailboxAddress)
-      get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive [(mailboxAddress, "Body of a test email")]
+      let testEmail = testEmailTo mailboxAddress
+      sendEmail testEmail
+      get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive [(mailboxAddress, (plainEmail testEmail))]
   describe "GET /receive" $
     it "responds with a delay waiting for an email to arrive" $ do
       timeStart <- liftIO getCurrentTime
@@ -41,8 +41,8 @@ jsonEmailsForReceive :: [(Text, Text)] -> ResponseMatcher
 jsonEmailsForReceive vs = 200 { matchBody =
   introspectBody
     (\body ->
-       [ (body ^.. values . key "address-from" . _String) `equalsTo` map fst vs
-       , (body ^.. values . key "body" . _String) `equalsTo` map snd vs
+       [ (body ^.. values . key "address-to" . _String) `equalsTo` map fst vs
+       , (body ^.. values . key "full-content" . _String) `equalsTo` map snd vs
        ])
   }
 
@@ -58,27 +58,28 @@ sendEmail te = do
   maildir <- Env.maildir
   liftIO $ do
     createDirectoryIfMissing True [i|#{maildir}/new/|]
-    writeFile
-      [i|#{maildir}/new/1566204945.111.51ff45ed527f|]
-      [i|
-Return-Path: #{addressFrom te}
-Delivered-To: #{addressTo te}
+    writeFile [i|#{maildir}/new/1566204945.111.51ff45ed527f|] (s (plainEmail te))
+
+testEmailTo :: Text -> TestEmail
+testEmailTo addressTo = TestEmail "test@unverified.email" addressTo "A test email" "Body of a test email"
+
+plainEmail :: TestEmail -> Text
+plainEmail TestEmail{..} = [i|
+Return-Path: #{addressFrom}
+Delivered-To: #{addressTo}
 Received: from user-PC (8ta-246-224-193.telkomadsl.co.za [41.246.224.193])
 	by 51ff45ed527f (OpenSMTPD) with ESMTP id 116053ef
-	for <#{addressTo te}>;
+	for <#{addressTo}>;
 	Mon, 19 Aug 2019 08:55:44 +0000 (UTC)
-From: #{addressFrom te}
-Subject: #{subject te}
-To: #{addressTo te}
+From: #{addressFrom}
+Subject: #{subject}
+To: #{addressTo}
 Date: Mon, 19 Aug 2019 10:55:37 +0200
 X-Priority: 3
 X-Library: Indy 8.0.25
 
-#{body te}
+#{body}
 |]
-
-testEmailTo :: Text -> TestEmail
-testEmailTo addressTo = TestEmail "test@unverified.email" addressTo "A test email" "Body of a test email"
 
 data TestEmail =
   TestEmail

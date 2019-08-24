@@ -26,6 +26,7 @@ library
   build-depends:
       aeson
     , base >= 4.7 && < 5
+    , directory
     , envy
     , load-env
     , protolude

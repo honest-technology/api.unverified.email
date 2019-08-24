@@ -1,12 +1,15 @@
 {-# LANGUAGE QuasiQuotes #-}
 module Action.Receive where
 
-import Control.Monad.IO.Class  (liftIO)
-import Control.Retry
-import Data.String.Interpolate (i)
-import Data.Text
-import Protolude
-import Web.Scotty              (ActionM, json)
+import           Control.Monad.IO.Class  (liftIO)
+import           Control.Retry
+import           Data.String.Interpolate (i)
+import           Data.Text               (Text)
+import qualified Data.Text               as T
+import qualified Data.Text.IO            as T
+import           Protolude
+import           System.Directory        (doesDirectoryExist, listDirectory)
+import           Web.Scotty              (ActionM, json)
 
 import qualified Env
 
@@ -26,7 +29,15 @@ readMailbox mailboxId = do
   where
   retry' = retrying jitterRetry considerRetrying . const
   jitterRetry = fullJitterBackoff 50_000 <> limitRetries 10
-  considerRetrying = const $ return . Protolude.null
+  considerRetrying _ emails = return (null emails)
 
 findEmails :: FilePath -> Text -> IO [Email]
-findEmails _maildir _mailboxId = return []
+findEmails maildir mailboxId =
+  ifM (doesDirectoryExist maildir)
+      (do
+        mailFiles <- listDirectory maildir >>= mapM (T.readFile . ((maildir++"/")++))
+        return . mapMaybe parseEmail $ filter (isForMailboxId mailboxId) mailFiles
+        )
+      (return [])
+  where
+  isForMailboxId = T.isInfixOf
