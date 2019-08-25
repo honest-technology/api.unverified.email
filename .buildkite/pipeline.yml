@@ -1,11 +1,23 @@
 steps:
   - label: Build and Test
     commands:
-      - stack build
-      - stack test
+      - make test
+      - make dist
     plugins:
       - docker#v3.3.0:
           image: "haskell:8.6.5"
           mount-buildkite-agent: false
           volumes:
             - "${BUILD_CACHE_HASKELL_STACK}:/root/.stack"
+
+  - label: Containers
+      commands:
+        - make containers
+      plugins:
+        - docker#v3.3.0:
+            image: "docker:latest"
+            always-pull: true
+            mount-buildkite-agent: false
+            privileged: true
+            volumes:
+              - "/var/run/docker.sock:/var/run/docker.sock"
