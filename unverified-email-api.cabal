@@ -68,7 +68,7 @@ executable unverified-email-api
   main-is:
       Main.hs
   ghc-options:
-      -Wall -Werror -threaded -O2 -rtsopts -with-rtsopts=-N -j
+      -Wall -Werror -threaded -O2 -rtsopts -with-rtsopts=-N -j -static
   build-depends:
       base
     , unverified-email-api

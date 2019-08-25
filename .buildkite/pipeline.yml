@@ -2,8 +2,7 @@ steps:
 - commands:
     - make build
     - make dist
-    - rm -rf /tmp/artifacts/unverified.email/*
-    - cp ./infra/api/dist/* /tmp/artifacts/unverified.email/
+    - rm -rf /tmp/artifacts/unverified.email/* && cp ./infra/api/dist/* /tmp/artifacts/unverified.email/
   label: Build and Test
   plugins:
     - docker#v3.3.0:
@@ -16,8 +15,7 @@ steps:
 
 - commands:
     - apk --no-cache add make bash wget tar gzip
-    - mkdir -p ./infra/api/dist
-    - cp /tmp/artifacts/unverified.email/* ./infra/api/dist/
+    - mkdir -p ./infra/api/dist && cp /tmp/artifacts/unverified.email/* ./infra/api/dist/
     - make containers
   label: Containers
   plugins:
