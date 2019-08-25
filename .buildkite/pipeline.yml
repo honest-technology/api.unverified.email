@@ -12,7 +12,7 @@ steps:
 
   - label: Containers
     commands:
-      - apk --no-cache add make
+      - apk --no-cache add make bash
       - make containers
     plugins:
       - docker#v3.3.0:
