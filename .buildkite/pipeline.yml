@@ -1,8 +1,8 @@
 steps:
-  - label: Build and Test
-    commands:
+  - commands:
       - make test
       - make dist
+    label: Build and Test
     plugins:
       - docker#v3.3.0:
           image: "haskell:8.6.5"
@@ -10,10 +10,12 @@ steps:
           volumes:
             - "${BUILD_CACHE_HASKELL_STACK}:/root/.stack"
 
-  - label: Containers
-    commands:
+  - wait
+
+  - commands:
       - apk --no-cache add make bash
       - make containers
+    label: Containers
     plugins:
       - docker#v3.3.0:
           image: "docker:latest"
