@@ -16,7 +16,7 @@ steps:
 
   - commands:
       - apk --no-cache add make bash
-      # - buildkite-agent artifact download unverified-email-api infra/api/dist/
+      - buildkite-agent artifact download infra/api/dist/unverified-email-api infra/api/dist/
       - make containers
     label: Containers
     plugins:
