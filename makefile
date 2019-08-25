@@ -26,10 +26,10 @@ containers:
 	docker build infra/smtpd -t ${IMAGE_SMTPD}
 	docker build infra/api -t ${IMAGE_API}
 
-.PHONY: deploy
-deploy:
-	ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'mkdir -p /opt/unverified.email/'
-	docker save ${IMAGE_SMTPD} | bzip2 -9 | pv | ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'bunzip2 | docker load'
-	docker save ${IMAGE_API} | bzip2 -9 | pv | ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'bunzip2 | docker load'
-    cat infra/nomad-definitions.hcl | ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'cat > /opt/unverified.email/nomad-definitions.hcl'
-	ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'nomad job run /opt/unverified.email/nomad-definitions.hcl'
+# .PHONY: deploy
+# deploy:
+# 	ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'mkdir -p /opt/unverified.email/'
+# 	docker save ${IMAGE_SMTPD} | bzip2 -9 | pv | ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'bunzip2 | docker load'
+# 	docker save ${IMAGE_API} | bzip2 -9 | pv | ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'bunzip2 | docker load'
+#     cat infra/nomad-definitions.hcl | ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'cat > /opt/unverified.email/nomad-definitions.hcl'
+# 	ssh -i ${SSH_PRIVATE_KEY} -oStrictHostKeyChecking=no ${REMOTE} 'nomad job run /opt/unverified.email/nomad-definitions.hcl'
