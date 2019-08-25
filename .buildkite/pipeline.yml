@@ -11,13 +11,13 @@ steps:
             - "${BUILD_CACHE_HASKELL_STACK}:/root/.stack"
 
   - label: Containers
-      commands:
-        - make containers
-      plugins:
-        - docker#v3.3.0:
-            image: "docker:latest"
-            always-pull: true
-            mount-buildkite-agent: false
-            privileged: true
-            volumes:
-              - "/var/run/docker.sock:/var/run/docker.sock"
+    commands:
+      - make containers
+    plugins:
+      - docker#v3.3.0:
+          image: "docker:latest"
+          always-pull: true
+          mount-buildkite-agent: false
+          privileged: true
+          volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
