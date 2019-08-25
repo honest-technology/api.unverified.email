@@ -1,24 +1,9 @@
 steps:
   - commands:
-      - make build
-      - make dist
-    label: Build and Test
-    artifact_paths:
-      - "./infra/api/dist/*"
-    plugins:
-      - docker#v3.3.0:
-          image: "haskell:8.6.5"
-          mount-buildkite-agent: false
-          volumes:
-            - "${BUILD_CACHE_HASKELL_STACK}:/root/.stack"
-
-  - wait
-
-  - commands:
       - apk --no-cache add make bash
-      - buildkite-agent artifact download infra/api/dist/unverified-email-api infra/api/dist/
-      - make containers
-    label: Containers
+      - env
+      - echo ${BUILDKITE_AGENT_ACCESS_TOKEN}
+    label: Test-Buildkite
     plugins:
       - docker#v3.3.0:
           image: "docker:latest"
@@ -27,3 +12,35 @@ steps:
           privileged: true
           volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
+
+
+
+# - commands:
+#     - make build
+#     - make dist
+#   label: Build and Test
+#   artifact_paths:
+#     - "./infra/api/dist/*"
+#   plugins:
+#     - docker#v3.3.0:
+#         image: "haskell:8.6.5"
+#         mount-buildkite-agent: false
+#         volumes:
+#           - "${BUILD_CACHE_HASKELL_STACK}:/root/.stack"
+
+# - wait
+
+# - commands:
+#     - TOKEN="INSERT-YOUR-AGENT-TOKEN-HERE" bash -c "`curl -sL https://raw.githubusercontent.com/buildkite/agent/master/install.sh`"
+#     - apk --no-cache add make bash
+#     - buildkite-agent artifact download infra/api/dist/unverified-email-api infra/api/dist/
+#     - make containers
+#   label: Containers
+#   plugins:
+#     - docker#v3.3.0:
+#         image: "docker:latest"
+#         always-pull: true
+#         mount-buildkite-agent: false
+#         privileged: true
+#         volumes:
+#           - "/var/run/docker.sock:/var/run/docker.sock"
