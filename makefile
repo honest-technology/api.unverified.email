@@ -17,8 +17,8 @@ test:
 
 .PHONY: dist
 dist:
-	mkdir -p ./infra/api/dist/
-	cp "$(shell stack path --dist-dir)/build/unverified-email-api/unverified-email-api" "./infra/api/dist/"
+	mkdir -p ./infra/api/dist/ && rm -rf ./infra/api/dist/*
+	cp "$(shell stack path --local-install-root)/bin/unverified-email-api" "./infra/api/dist/"
 	strip ./infra/api/dist/*
 
 .PHONY: containers
