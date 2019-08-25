@@ -1,4 +1,4 @@
-name:                api-unverified-email
+name:                unverified-email-api
 version:             0.1.0.0
 homepage:            https://github.com/ptek/unverified.email
 license:             AGPL
@@ -62,7 +62,7 @@ library
   default-language:
       Haskell2010
 
-executable api-unverified-email-exe
+executable unverified-email-api
   hs-source-dirs:
       app
   main-is:
@@ -71,11 +71,11 @@ executable api-unverified-email-exe
       -Wall -Werror -threaded -O2 -rtsopts -with-rtsopts=-N -j
   build-depends:
       base
-    , api-unverified-email
+    , unverified-email-api
   default-language:
       Haskell2010
 
-test-suite api-unverified-email-test
+test-suite unverified-email-api-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Test.hs
@@ -86,7 +86,7 @@ test-suite api-unverified-email-test
     , Controller.UsageTest
     , Controller.ReceiveTest
   build-depends:
-      api-unverified-email
+      unverified-email-api
     , aeson
     , base
     , directory
