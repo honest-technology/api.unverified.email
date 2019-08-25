@@ -1,5 +1,6 @@
 tmp
 secrets
+infra/api/dist
 
 # Created by https://www.gitignore.io/api/elm,node,macos,haskell
 # Edit at https://www.gitignore.io/?templates=elm,node,macos,haskell

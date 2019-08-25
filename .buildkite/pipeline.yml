@@ -1,8 +1,10 @@
 steps:
   - commands:
-      - make test
+      - make build
       - make dist
     label: Build and Test
+    artifact_paths:
+      - "./infra/api/dist/*"
     plugins:
       - docker#v3.3.0:
           image: "haskell:8.6.5"
@@ -14,6 +16,7 @@ steps:
 
   - commands:
       - apk --no-cache add make bash
+      # - buildkite-agent artifact download unverified-email-api infra/api/dist/
       - make containers
     label: Containers
     plugins:
