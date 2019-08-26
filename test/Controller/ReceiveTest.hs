@@ -35,7 +35,8 @@ spec = do
       timeStart <- liftIO getCurrentTime
       _ <- get "/receive/unknown-mailbox-id"
       timeFinished <- liftIO getCurrentTime
-      (timeFinished `diffUTCTime` timeStart) `shouldSatisfy` (> 25)
+      (timeFinished `diffUTCTime` timeStart) `shouldSatisfy` (> 15)
+      (timeFinished `diffUTCTime` timeStart) `shouldSatisfy` (< 29)
 
 jsonEmailsForReceive :: [(Text, Text)] -> ResponseMatcher
 jsonEmailsForReceive vs = 200 { matchBody =

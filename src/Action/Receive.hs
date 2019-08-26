@@ -28,7 +28,7 @@ readMailbox mailboxId = do
     retry' $ findEmails [i|#{maildir}/new/|] mailboxId
   where
   retry' = retrying jitterRetry considerRetrying . const
-  jitterRetry = fullJitterBackoff 50_000 <> limitRetries 10
+  jitterRetry = limitRetriesByCumulativeDelay 28_000_000 (fullJitterBackoff 250_000)
   considerRetrying _ emails = return (null emails)
 
 findEmails :: FilePath -> Text -> IO [Email]
