@@ -12,6 +12,7 @@ steps:
         volumes:
           - "${BUILD_CACHE_HASKELL_STACK}:/root/.stack"
           - "/tmp/artifacts/unverified.email/:/tmp/artifacts/unverified.email/"
+
 - wait
 
 - commands:
@@ -22,7 +23,21 @@ steps:
   plugins:
     - docker#v3.3.0:
         image: "docker:latest"
-        always-pull: true
+        mount-buildkite-agent: false
+        privileged: true
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock"
+          - "/tmp/artifacts/unverified.email/:/tmp/artifacts/unverified.email/"
+
+- wait
+
+- commands:
+    - apk --no-cache add make bash wget tar gzip
+    - make deploy
+  label: Deploy
+  plugins:
+    - docker#v3.3.0:
+        image: "docker:latest"
         mount-buildkite-agent: false
         privileged: true
         volumes:
