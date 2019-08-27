@@ -1,6 +1,6 @@
 steps:
 - commands:
-    - make test
+    - make build
     - make dist
     - rm -rf /tmp/artifacts/unverified.email/*
     - cp ./infra/api/dist/* /tmp/artifacts/unverified.email/
@@ -32,14 +32,5 @@ steps:
 - wait
 
 - commands:
-    - apk --no-cache add make bash wget tar gzip openssh-client pv
     - make deploy
   label: Deploy
-  plugins:
-    - docker#v3.3.0:
-        image: "docker:latest"
-        mount-buildkite-agent: false
-        privileged: true
-        volumes:
-          - "/var/run/docker.sock:/var/run/docker.sock"
-          - "/tmp/artifacts/unverified.email/:/tmp/artifacts/unverified.email/"
