@@ -4,7 +4,7 @@ job "unverified.email" {
   update {
     max_parallel = 2
     min_healthy_time = "30s"
-    healthy_deadline = "10m"
+    healthy_deadline = "5m"
   }
 
   group "cluster-1" {
