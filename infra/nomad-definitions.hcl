@@ -6,12 +6,15 @@ job "unverified.email" {
       driver = "docker"
 
       config {
-        image = "hashicorp/http-echo:latest"
-        args = [
-          "-listen", ":80",
-          "-text", "This is api.unverified.email",
-        ]
+        image = "unverified.email/api:unversioned"
         network_mode = "host"
+        force_pull = "false"
+        mounts = [{
+            type = "volume"
+            target = "/mailbox/unverified/"
+            source = "mailbox-unverified"
+            readonly = true
+        }]
       }
 
       resources {
@@ -30,6 +33,12 @@ job "unverified.email" {
         image = "unverified.email/smtp:unversioned"
         network_mode = "host"
         force_pull = "false"
+        mounts = [{
+          type = "volume"
+          target = "/mailbox/unverified/"
+          source = "mailbox-unverified"
+          readonly = false
+        }]
       }
 
       resources {
