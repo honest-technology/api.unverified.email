@@ -31,14 +31,5 @@ steps:
 - wait
 
 - commands:
-    - apk --no-cache add bash wget tar gzip openssh-client
     - ./do deploy
   label: Deploy
-  plugins:
-    - docker#v3.3.0:
-        image: "docker:latest"
-        mount-buildkite-agent: false
-        privileged: true
-        volumes:
-          - "/var/run/docker.sock:/var/run/docker.sock"
-          - "/tmp/artifacts/unverified.email/:/tmp/artifacts/unverified.email/"
