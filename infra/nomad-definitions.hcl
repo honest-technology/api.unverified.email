@@ -1,18 +1,12 @@
 job "unverified.email" {
   datacenters = ["dc1"]
 
-  update {
-    max_parallel = 2
-    min_healthy_time = "30s"
-    healthy_deadline = "5m"
-  }
-
   group "cluster-1" {
     task "api-1" {
       driver = "docker"
 
       config {
-        image = "unverified.email/api:unversioned"
+        image = "unverified.email/api:${COMMIT_ID}"
         network_mode = "host"
         force_pull = "false"
         mounts = [{
@@ -36,7 +30,7 @@ job "unverified.email" {
       driver = "docker"
 
       config {
-        image = "unverified.email/smtp:unversioned"
+        image = "unverified.email/smtp:${COMMIT_ID}"
         network_mode = "host"
         force_pull = "false"
         mounts = [{

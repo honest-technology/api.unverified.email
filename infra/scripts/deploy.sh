@@ -10,8 +10,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "${DIR}/variables.sh"
 
 docker save "${IMAGE_SMTPD}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no "${REMOTE}" 'mkdir -p /opt/unverified.email/; bunzip2 | docker load'
-docker save "${IMAGE_API}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no "${REMOTE}" 'mkdir -p /opt/unverified.email/; bunzip2 | docker load'
-scp -oStrictHostKeyChecking=no "infra/nomad-definitions.hcl" "${REMOTE}:/opt/unverified.email/nomad-definitions.hcl"
+docker save "${IMAGE_API}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no  'mkdir -p /opt/unverified.email/; bunzip2 | docker load'
+
+cat infra/nomad-definitions.hcl | envsubst | ssh -oStrictHostKeyChecking=no "${REMOTE}" "cat > /opt/unverified.email/nomad-definitions.hcl"
 ssh -oStrictHostKeyChecking=no "${REMOTE}" 'nomad job run /opt/unverified.email/nomad-definitions.hcl'
 
 sleep 5
