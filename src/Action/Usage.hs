@@ -30,8 +30,4 @@ https://#{apiUrl}/receive/<mailbox_id>
 replacing <mailbox_id> with the id from the first request. The service will
 answer with a list of all emails it can find in mailbox.
 The receive command will wait for emails to arrive for up to 30 seconds.
-
-For more information, please refer to https://#{infoPageUrl}
-
-Created and hosted by Pavlo Kerestey.
 |]

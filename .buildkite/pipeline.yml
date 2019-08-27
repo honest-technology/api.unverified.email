@@ -1,8 +1,9 @@
 steps:
 - commands:
-    - make build
+    - make test
     - make dist
-    - rm -rf /tmp/artifacts/unverified.email/* && cp ./infra/api/dist/* /tmp/artifacts/unverified.email/
+    - rm -rf /tmp/artifacts/unverified.email/*
+    - cp ./infra/api/dist/* /tmp/artifacts/unverified.email/
   label: Build and Test
   plugins:
     - docker#v3.3.0:
