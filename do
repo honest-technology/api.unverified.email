@@ -2,6 +2,7 @@
 
 set -o pipefail
 set -eux
+
 source infra/scripts/variables.sh
 
 function _goal_build() {
@@ -26,6 +27,15 @@ function _goal_deploy() {
   infra/scripts/deploy.sh
 }
 
+function _goal_linter-sh() {
+  shellcheck -x ./do
+  find . | grep '.sh$' | xargs shellcheck -x
+}
+
+function _goal_linters() {
+  _goal_linter-sh
+}
+
 function _goal_help() {
   cat <<EOHELP
   usage do <target>
@@ -33,6 +43,8 @@ function _goal_help() {
   Targets:
   build                - build the project
   test                 - build and test the project
+
+  linters              - run all linters
 
   dist                 - copy the artifacts into ./infra/api/dist
 
