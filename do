@@ -3,7 +3,7 @@
 set -o pipefail
 set -eux
 
-source infra/scripts/variables.sh
+source infra/variables.sh
 
 function _goal_build() {
   stack build

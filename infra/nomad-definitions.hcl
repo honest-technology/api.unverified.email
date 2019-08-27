@@ -6,7 +6,7 @@ job "unverified.email" {
       driver = "docker"
 
       config {
-        image = "unverified.email/api:${COMMIT_ID}"
+        image = "${IMAGE_API}"
         network_mode = "host"
         force_pull = "false"
         mounts = [{
@@ -30,7 +30,7 @@ job "unverified.email" {
       driver = "docker"
 
       config {
-        image = "unverified.email/smtp:${COMMIT_ID}"
+        image = "${IMAGE_SMTPD}"
         network_mode = "host"
         force_pull = "false"
         mounts = [{
