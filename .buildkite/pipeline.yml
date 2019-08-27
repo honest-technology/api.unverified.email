@@ -1,7 +1,6 @@
 steps:
 - commands:
-    - make build
-    - make dist
+    - ./do test dist
     - rm -rf /tmp/artifacts/unverified.email/*
     - cp ./infra/api/dist/* /tmp/artifacts/unverified.email/
   label: Build and Test
@@ -16,9 +15,9 @@ steps:
 - wait
 
 - commands:
-    - apk --no-cache add make bash wget tar gzip
+    - apk --no-cache add bash wget tar gzip
     - mkdir -p ./infra/api/dist && cp /tmp/artifacts/unverified.email/* ./infra/api/dist/
-    - make containers
+    - ./do containers
   label: Containers
   plugins:
     - docker#v3.3.0:
@@ -32,5 +31,14 @@ steps:
 - wait
 
 - commands:
-    - make deploy
+    - apk --no-cache add bash wget tar gzip openssh-client
+    - ./do deploy
   label: Deploy
+  plugins:
+    - docker#v3.3.0:
+        image: "docker:latest"
+        mount-buildkite-agent: false
+        privileged: true
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock"
+          - "/tmp/artifacts/unverified.email/:/tmp/artifacts/unverified.email/"
