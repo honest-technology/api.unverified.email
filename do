@@ -14,7 +14,7 @@ function _goal_test() {
 
 function _goal_dist() {
   mkdir -p ./infra/api/dist/ && rm -rf ./infra/api/dist/*
-  cp "$(shell stack path --local-install-root)/bin/unverified-email-api" "./infra/api/dist/"
+  cp "$(stack path --local-install-root)/bin/unverified-email-api" "./infra/api/dist/"
   strip ./infra/api/dist/*
 }
 
