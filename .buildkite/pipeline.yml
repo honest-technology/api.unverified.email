@@ -32,7 +32,7 @@ steps:
 - wait
 
 - commands:
-    - apk --no-cache add make bash wget tar gzip
+    - apk --no-cache add make bash wget tar gzip openssh-client pv
     - make deploy
   label: Deploy
   plugins:

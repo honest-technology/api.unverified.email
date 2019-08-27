@@ -14,3 +14,6 @@ docker save ${IMAGE_API} | bzip2 -9 | pv | ssh -oStrictHostKeyChecking=no ${REMO
 scp -oStrictHostKeyChecking=no "infra/nomad-definitions.hcl" "${REMOTE}:/opt/unverified.email/nomad-definitions.hcl"
 ssh -oStrictHostKeyChecking=no "${REMOTE}" 'nomad job run /opt/unverified.email/nomad-definitions.hcl'
 
+sleep 5
+ssh -oStrictHostKeyChecking=no "${REMOTE}" '(nomad status unverified.email | grep -E "Status\s+= running" > /dev/null && echo "OK") || (nomad status unverified.email; exit 1)'
+
