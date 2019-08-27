@@ -14,7 +14,7 @@ job "unverified.email" {
       config {
         image = "unverified.email/api:unversioned"
         network_mode = "host"
-        force_pull = "false"
+        force_pull = "true"
         mounts = [{
             type = "volume"
             target = "/mailbox/unverified/"
@@ -38,7 +38,7 @@ job "unverified.email" {
       config {
         image = "unverified.email/smtp:unversioned"
         network_mode = "host"
-        force_pull = "false"
+        force_pull = "true"
         mounts = [{
           type = "volume"
           target = "/mailbox/unverified/"
