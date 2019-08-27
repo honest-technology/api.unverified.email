@@ -1,6 +1,12 @@
 job "unverified.email" {
   datacenters = ["dc1"]
 
+  update {
+    max_parallel = 2
+    min_healthy_time = "30s"
+    healthy_deadline = "10m"
+  }
+
   group "cluster-1" {
     task "api-1" {
       driver = "docker"
