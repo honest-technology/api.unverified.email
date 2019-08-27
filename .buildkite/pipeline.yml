@@ -15,7 +15,7 @@ steps:
 - wait
 
 - commands:
-    - apk --no-cache add bash wget tar gzip
+    - apk --no-cache add bash tar gzip git
     - mkdir -p ./infra/api/dist && cp /tmp/artifacts/unverified.email/* ./infra/api/dist/
     - ./do containers
   label: Containers
