@@ -1,6 +1,8 @@
 job "unverified-email" {
   datacenters = ["dc1"]
 
+  type = "service"
+
   update {
     max_parallel = 1
     min_healthy_time = "10s"
@@ -83,6 +85,7 @@ job "unverified-email" {
       }
 
       service {
+        port = "http"
         tags = [
           "traefik.enable=true",
           "traefik.http.routers.api-1.rule=Host(`api.unverified.email`)",
