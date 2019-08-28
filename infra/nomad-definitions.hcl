@@ -37,8 +37,8 @@ job "unverified.email" {
           },
           {
             type = "bind"
-            target = "/opt/unverified.email/traefik/letsencrypt"
-            source = "/letsencrypt"
+            target = "/letsencrypt"
+            source = "/opt/unverified.email/traefik/letsencrypt"
             readonly = false
           }
         ]
