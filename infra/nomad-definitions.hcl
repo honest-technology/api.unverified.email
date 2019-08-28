@@ -1,4 +1,4 @@
-job "unverified.email" {
+job "unverified_email" {
   datacenters = ["dc1"]
 
   update {
