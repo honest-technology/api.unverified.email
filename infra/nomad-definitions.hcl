@@ -74,20 +74,21 @@ job "unverified.email" {
             readonly = true
           }
         ]
-        service {
-          tags = [
-            "traefik.enable=true",
-            "traefik.http.routers.api-1.rule=Host(`api.unverified.email`)",
-            "traefik.http.routers.api-1.entrypoints=websecure",
-            "traefik.http.routers.api-1.tls.certresolver=challenge"
-          ]
-        }
       }
 
       resources {
         network {
           port "http" {}
         }
+      }
+
+      service {
+        tags = [
+          "traefik.enable=true",
+          "traefik.http.routers.api-1.rule=Host(`api.unverified.email`)",
+          "traefik.http.routers.api-1.entrypoints=websecure",
+          "traefik.http.routers.api-1.tls.certresolver=challenge"
+        ]
       }
     }
 
