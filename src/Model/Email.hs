@@ -14,7 +14,7 @@ data Email = Email {
   } deriving (Generic, Show)
 
 instance ToJSON Email where
-  toEncoding = genericToEncoding (defaultOptions {fieldLabelModifier = camelTo2 '-'})
+  toEncoding = genericToEncoding (defaultOptions {fieldLabelModifier = camelTo2 '_'})
 
 parseEmail :: Text -> Maybe Email
 parseEmail email =

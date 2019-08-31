@@ -25,6 +25,6 @@ instance ToJSON Mailbox where
   toJSON m = object [
       "mailbox" .= mailboxAddress m
     , "receive" .= receiveUrl m
-    , "mailbox-id" .= mailboxId m
+    , "mailbox_id" .= mailboxId m
     , "created" .= formatISO8601Millis (created m)
     ]

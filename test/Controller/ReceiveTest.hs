@@ -47,15 +47,15 @@ jsonEmailsForReceive :: [(Text, Text)] -> ResponseMatcher
 jsonEmailsForReceive vs = 200 { matchBody =
   introspectBody
     (\body ->
-       [ (body ^.. values . key "address-to" . _String) `equalsTo` map fst vs
-       , (body ^.. values . key "full-content" . _String) `equalsTo` map snd vs
+       [ (body ^.. values . key "address_to" . _String) `equalsTo` map fst vs
+       , (body ^.. values . key "full_content" . _String) `equalsTo` map snd vs
        ])
   }
 
 createMailbox :: WaiSession (Text, Text)
 createMailbox = do
   mailbox :: Text <- s . simpleBody <$> get "/create"
-  let mailboxId = mailbox ^. key "mailbox-id" . _String
+  let mailboxId = mailbox ^. key "mailbox_id" . _String
   let mailboxAddress = mailbox ^. key "mailbox" . _String
   return (mailboxId, mailboxAddress)
 
