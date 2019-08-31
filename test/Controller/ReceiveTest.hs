@@ -9,8 +9,9 @@ import Lens.Micro
 import Lens.Micro.Aeson
 import Network.Wai                    (Application)
 import Network.Wai.Test
-import System.Directory               (createDirectoryIfMissing)
-import Test.Hspec                     (SpecWith, describe, it)
+import Protolude                      (whenM)
+import System.Directory               (createDirectoryIfMissing, doesDirectoryExist, removeDirectoryRecursive)
+import Test.Hspec                     (SpecWith, before_, describe, it)
 import Test.Hspec.Expectations.Lifted
 import Test.Hspec.Wai
 import Text.StringConvert             (s)
@@ -21,20 +22,20 @@ import Test.Hspec.Wai.FeatureToggle
 import Test.Hspec.Wai.ValueMatchers
 
 spec :: SpecWith Application
-spec = do
-  withFeatureToggleOn "FEATURE_NO_DELAY" $ describe "GET /receive" $ do
-    it "responds with empty emails for unknown mailbox id" $
-      get "/receive/unknown-mailbox-id" `shouldRespondWith` jsonEmailsForReceive []
-    it "responds with an email when it arrives in the mailbox" $ do
-      (mailboxId, mailboxAddress) <- createMailbox
-      let testEmail = testEmailTo mailboxAddress
-      sendEmail testEmail
-      get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive [(mailboxAddress, (plainEmail testEmail))]
-    it "doesnt show emails for inboxes that were not created" $ do
-      pendingWith "Not implemented yet"
-      let mailboxId = "guessable-mailbox-id" :: Text
-      sendEmail $ testEmailTo [i|#{mailboxId}@unverified.email|]
-      get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive []
+spec = before_ cleanMaildir $ do
+  withFeatureToggleOn "FEATURE_NO_DELAY" $
+    describe "GET /receive" $ do
+      it "responds with empty emails for unknown mailbox id" $
+        get "/receive/unknown-mailbox-id" `shouldRespondWith` jsonEmailsForReceive []
+      it "responds with an email when it arrives in the mailbox" $ do
+        (mailboxId, mailboxAddress) <- createMailbox
+        let testEmail = testEmailTo mailboxAddress
+        sendEmail testEmail
+        get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive [(mailboxAddress, (plainEmail testEmail))]
+      it "doesnt show emails for inboxes that were not created" $ do
+        let mailboxId = "guessable-mailbox-id" :: Text
+        sendEmail $ testEmailTo [i|#{mailboxId}@unverified.email|]
+        get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive []
   describe "GET /receive" $
     it "responds with a delay waiting for an email to arrive" $ do
       timeStart <- liftIO getCurrentTime
@@ -42,6 +43,11 @@ spec = do
       timeFinished <- liftIO getCurrentTime
       (timeFinished `diffUTCTime` timeStart) `shouldSatisfy` (> 15)
       (timeFinished `diffUTCTime` timeStart) `shouldSatisfy` (< 29)
+
+cleanMaildir :: IO ()
+cleanMaildir = do
+  maildir <- Env.maildir
+  whenM (doesDirectoryExist maildir) (removeDirectoryRecursive maildir)
 
 jsonEmailsForReceive :: [(Text, Text)] -> ResponseMatcher
 jsonEmailsForReceive vs = 200 { matchBody =
@@ -61,10 +67,10 @@ createMailbox = do
 
 sendEmail :: TestEmail -> WaiSession ()
 sendEmail te = do
-  maildir <- Env.maildir
+  maildir <- (++ "/new") <$> Env.maildir
   liftIO $ do
-    createDirectoryIfMissing True [i|#{maildir}/new/|]
-    writeFile [i|#{maildir}/new/1566204945.111.51ff45ed527f|] (s (plainEmail te))
+    createDirectoryIfMissing True maildir
+    writeFile [i|#{maildir}/1566204945.111.51ff45ed527f|] (s (plainEmail te))
 
 testEmailTo :: Text -> TestEmail
 testEmailTo addressTo = TestEmail "test@unverified.email" addressTo "A test email" "Body of a test email"

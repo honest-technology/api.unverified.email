@@ -16,10 +16,13 @@ app' :: ScottyM ()
 app' = Controller.Mailbox.controller
 
 testableApp :: IO Application
-testableApp = scottyApp app'
+testableApp =
+  ifM Env.debugMode
+      (scottyApp $ middleware logStdoutDev >> app')
+      (scottyApp app')
 
 runnableApp :: IO ()
 runnableApp = do
   loadEnv
   port <- Env.port
-  scotty (fromIntegral port) (middleware logStdout >> app')
+  scotty (fromIntegral port) $ middleware logStdout >> app'

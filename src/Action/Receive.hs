@@ -10,11 +10,11 @@ import qualified Data.Text.Encoding       as TE
 import qualified Data.Text.Encoding.Error as TE
 import           Protolude
 import           System.Directory         (doesDirectoryExist, listDirectory)
+import           Text.StringConvert       (s)
 import           Web.Scotty               (ActionM, json, liftAndCatchIO)
 
 import qualified Env
-
-import Model.Email
+import           Model.Email
 
 receiveMailbox :: Text -> ActionM ()
 receiveMailbox mailboxId = liftAndCatchIO (readMailbox mailboxId) >>= json
@@ -22,11 +22,9 @@ receiveMailbox mailboxId = liftAndCatchIO (readMailbox mailboxId) >>= json
 readMailbox :: Text -> IO [Email]
 readMailbox mailboxId = do
   maildir <- Env.maildir
-  noDelayEnabled <- Env.featureToggle "FEATURE_NO_DELAY"
-  if noDelayEnabled then
-    findEmails [i|#{maildir}/new/|] mailboxId
-  else
-    retry' $ findEmails [i|#{maildir}/new/|] mailboxId
+  ifM (Env.featureToggle "FEATURE_NO_DELAY")
+      (findEmails maildir mailboxId)
+      (retry' $ findEmails maildir mailboxId)
   where
   retry' = retrying jitterRetry considerRetrying . const
   jitterRetry = limitRetriesByCumulativeDelay 28_000_000 (fullJitterBackoff 250_000)
@@ -34,12 +32,20 @@ readMailbox mailboxId = do
 
 findEmails :: FilePath -> Text -> IO [Email]
 findEmails maildir mailboxId =
-  ifM (doesDirectoryExist maildir)
+  ifM (directoriesExist &&^ isMailboxIdExpected mailboxId)
       (do
-        mailFiles <- listDirectory maildir >>= mapM (maybeReadFile . ((maildir++"/")++))
+        mailFiles <- listDirectory newMailsDir >>= mapM (maybeReadFile . ([i|#{newMailsDir}/|]++))
         return . mapMaybe parseEmail $ filter (isForMailboxId mailboxId) mailFiles
         )
       (return [])
   where
+  newMailsDir = [i|#{maildir}/new|]
+  expectedMailsDir = [i|#{maildir}/expected|]
   isForMailboxId = T.isInfixOf
   maybeReadFile path = TE.decodeUtf8With TE.lenientDecode <$> B.readFile path
+  directoriesExist =
+    doesDirectoryExist maildir
+    &&^ doesDirectoryExist newMailsDir
+    &&^ doesDirectoryExist expectedMailsDir
+  isMailboxIdExpected mailboxId' =
+    fmap (elem (s mailboxId')) (listDirectory expectedMailsDir)

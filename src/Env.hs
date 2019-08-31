@@ -4,6 +4,7 @@ module Env
   , infoPageURL
   , maildir
   , featureToggle
+  , debugMode
   ) where
 
 import           Control.Monad.Fail
@@ -25,6 +26,9 @@ infoPageURL = T.pack <$> readEnvString "INFO_PAGE_URL"
 
 maildir :: (MonadIO m, MonadFail m) => m FilePath
 maildir = readEnvString "MAILDIR"
+
+debugMode :: (MonadIO m) => m Bool
+debugMode = featureToggle "DEBUG_MODE"
 
 {-# INLINEABLE featureToggle #-}
 featureToggle :: (MonadIO m) => String -> m Bool

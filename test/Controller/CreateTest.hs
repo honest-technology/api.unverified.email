@@ -3,14 +3,19 @@ module Controller.CreateTest where
 import Lens.Micro
 import Lens.Micro.Aeson
 import Network.Wai      (Application)
+import Protolude        (whenM)
+import System.Directory (doesDirectoryExist, removeDirectoryRecursive)
 import Test.Hspec
 import Test.Hspec.Wai
 
-import Test.Hspec.Wai.FeatureToggle
-import Test.Hspec.Wai.ValueMatchers
+
+import qualified Env
+import           Test.Hspec.Wai.FeatureToggle
+import           Test.Hspec.Wai.ValueMatchers
+
 
 spec :: SpecWith Application
-spec =
+spec = before_ cleanMaildir $
   withFeatureToggleOn "FEATURE_NO_DELAY" $
     describe "GET /create" $
       it "responds with information about a new mailbox" $
@@ -26,3 +31,8 @@ jsonResponseForCreate = 200 { matchBody =
        , (body ^? key "created" . _String) `hasLength` 24
        ])
   }
+
+cleanMaildir :: IO ()
+cleanMaildir = do
+  maildir <- Env.maildir
+  whenM (doesDirectoryExist maildir) (removeDirectoryRecursive maildir)
