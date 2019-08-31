@@ -31,7 +31,7 @@ spec = before_ cleanMaildir $ do
         (mailboxId, mailboxAddress) <- createMailbox
         let testEmail = testEmailTo mailboxAddress
         sendEmail testEmail
-        get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive [(mailboxAddress, (plainEmail testEmail))]
+        get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive [(mailboxAddress, plainEmail testEmail)]
       it "doesnt show emails for inboxes that were not created" $ do
         let mailboxId = "guessable-mailbox-id" :: Text
         sendEmail $ testEmailTo [i|#{mailboxId}@unverified.email|]

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -o pipefail
-set -eux
+set -eu
 
 source infra/variables.sh
 
@@ -40,8 +40,13 @@ function _goal_linter-sh() {
   find . | grep '.sh$' | xargs shellcheck -x
 }
 
+function _goal_linter-hs() {
+  find . | grep '.hs$' | xargs stack exec hlint -- -XQuasiQuotes
+}
+
 function _goal_linters() {
   _goal_linter-sh
+  _goal_linter-hs
 }
 
 function _goal_help() {
@@ -59,9 +64,21 @@ function _goal_help() {
   containers           - build containers
   deploy               - deploy the containers
 EOHELP
+
+  exit 1
 }
 
+set +u
+# shellcheck disable=SC2198
+if [ -z "${@}" ]; then _goal_help; fi
+set -u
 for target in "${@}"
 do
+  if [ "$(type -t "_goal_${target}")" = function ]
+  then
+    set -x
     eval "_goal_${target}"
+  else
+    _goal_help
+  fi
 done
