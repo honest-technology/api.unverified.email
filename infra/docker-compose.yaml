@@ -22,6 +22,7 @@ services:
     volumes:
       - "/opt/unverified.email/traefik/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: "always"
 
   api:
     image: "${IMAGE_API}"
@@ -47,6 +48,7 @@ services:
         read_only: true
         volume:
           nocopy: true
+    restart: "always"
 
   smtpd:
     image: "${IMAGE_SMTPD}"
@@ -58,6 +60,7 @@ services:
         source: "mailbox-unverified"
         target: "/mailbox/unverified/"
         read_only: false
+    restart: "always"
 
 volumes:
   mailbox-unverified:
