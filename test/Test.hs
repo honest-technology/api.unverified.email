@@ -1,14 +1,14 @@
 module Main (main) where
 
+import LoadEnv
 import Test.Hspec
 import Test.Hspec.Wai
-import LoadEnv
 
 import Dispatcher (testableApp)
 
-import qualified Controller.UsageTest
 import qualified Controller.CreateTest
 import qualified Controller.ReceiveTest
+import qualified Controller.UsageTest
 
 main :: IO ()
 main = do

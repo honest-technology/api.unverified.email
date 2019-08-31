@@ -20,11 +20,19 @@ function _goal_dist() {
 }
 
 function _goal_containers() {
-  infra/scripts/build-containers.sh
+  docker build infra/smtpd -t "${IMAGE_SMTPD}"
+  docker build infra/api -t "${IMAGE_API}"
 }
 
 function _goal_deploy() {
-  infra/scripts/deploy.sh
+  docker save "${IMAGE_SMTPD}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no "${REMOTE}" 'mkdir -p /opt/unverified.email/; bunzip2 | docker load'
+  docker save "${IMAGE_API}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no "${REMOTE}" 'mkdir -p /opt/unverified.email/; bunzip2 | docker load'
+
+  envsubst < infra/docker-compose.yaml | ssh -oStrictHostKeyChecking=no "${REMOTE}" "cat > /opt/unverified.email/docker-compose.yaml"
+  ssh -oStrictHostKeyChecking=no "${REMOTE}" 'cd /opt/unverified.email/ && docker-compose up -d --force-recreate'
+
+  sleep 5
+  ssh -oStrictHostKeyChecking=no "${REMOTE}" 'docker ps -a'
 }
 
 function _goal_linter-sh() {

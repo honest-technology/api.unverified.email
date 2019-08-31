@@ -10,4 +10,5 @@ ENV PORT=80 API_URL="api.unverified.email" INFO_PAGE_URL="unverified.email" MAIL
 
 EXPOSE 80/tcp
 
-ENTRYPOINT ["tini", "-g", "--", "/opt/bin/unverified-email-api"]
+#ENTRYPOINT ["tini", "-vv", "-g", "--", "/opt/bin/unverified-email-api"]
+ENTRYPOINT ["/opt/bin/unverified-email-api"]

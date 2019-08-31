@@ -21,7 +21,7 @@ jsonResponseForCreate = 200 { matchBody =
   introspectBody
     (\body ->
        [ isUUID (body ^? key "mailbox-id" . _String)
-       , (body ^? key "mailbox" . _String) `contains` "unverified.email"
+       , (body ^? key "mailbox" . _String) `contains` "@unverified.email"
        , (body ^? key "receive" . _String) `contains` "https://api.unverified.email/receive"
        , (body ^? key "created" . _String) `hasLength` 24
        ])

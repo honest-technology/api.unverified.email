@@ -30,6 +30,11 @@ spec = do
       let testEmail = testEmailTo mailboxAddress
       sendEmail testEmail
       get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive [(mailboxAddress, (plainEmail testEmail))]
+    it "doesnt show emails for inboxes that were not created" $ do
+      pendingWith "Not implemented yet"
+      let mailboxId = "guessable-mailbox-id" :: Text
+      sendEmail $ testEmailTo [i|#{mailboxId}@unverified.email|]
+      get [i|/receive/#{mailboxId}|] `shouldRespondWith` jsonEmailsForReceive []
   describe "GET /receive" $
     it "responds with a delay waiting for an email to arrive" $ do
       timeStart <- liftIO getCurrentTime
