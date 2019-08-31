@@ -3,11 +3,12 @@ module Dispatcher (
   , testableApp
   ) where
 
-import Network.Wai (Application)
-import Web.Scotty (ScottyM, scottyApp, scotty)
-import Protolude
 import qualified Env
-import LoadEnv
+import           LoadEnv
+import           Network.Wai                          (Application)
+import           Network.Wai.Middleware.RequestLogger
+import           Protolude
+import           Web.Scotty                           (ScottyM, scotty, scottyApp, middleware)
 
 import qualified Controller.Mailbox
 
@@ -21,4 +22,4 @@ runnableApp :: IO ()
 runnableApp = do
   loadEnv
   port <- Env.port
-  scotty (fromIntegral port) app'
+  scotty (fromIntegral port) (middleware logStdout >> app')

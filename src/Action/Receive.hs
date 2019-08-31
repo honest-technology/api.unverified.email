@@ -1,22 +1,23 @@
 {-# LANGUAGE QuasiQuotes #-}
 module Action.Receive where
 
-import           Control.Monad.IO.Class  (liftIO)
 import           Control.Retry
-import           Data.String.Interpolate (i)
-import           Data.Text               (Text)
-import qualified Data.Text               as T
-import qualified Data.Text.IO            as T
+import qualified Data.ByteString          as B
+import           Data.String.Interpolate  (i)
+import           Data.Text                (Text)
+import qualified Data.Text                as T
+import qualified Data.Text.Encoding       as TE
+import qualified Data.Text.Encoding.Error as TE
 import           Protolude
-import           System.Directory        (doesDirectoryExist, listDirectory)
-import           Web.Scotty              (ActionM, json)
+import           System.Directory         (doesDirectoryExist, listDirectory)
+import           Web.Scotty               (ActionM, json, liftAndCatchIO)
 
 import qualified Env
 
 import Model.Email
 
 receiveMailbox :: Text -> ActionM ()
-receiveMailbox mailboxId = liftIO (readMailbox mailboxId) >>= json
+receiveMailbox mailboxId = liftAndCatchIO (readMailbox mailboxId) >>= json
 
 readMailbox :: Text -> IO [Email]
 readMailbox mailboxId = do
@@ -35,9 +36,10 @@ findEmails :: FilePath -> Text -> IO [Email]
 findEmails maildir mailboxId =
   ifM (doesDirectoryExist maildir)
       (do
-        mailFiles <- listDirectory maildir >>= mapM (T.readFile . ((maildir++"/")++))
+        mailFiles <- listDirectory maildir >>= mapM (maybeReadFile . ((maildir++"/")++))
         return . mapMaybe parseEmail $ filter (isForMailboxId mailboxId) mailFiles
         )
       (return [])
   where
   isForMailboxId = T.isInfixOf
+  maybeReadFile path = TE.decodeUtf8With TE.lenientDecode <$> B.readFile path

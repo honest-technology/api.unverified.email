@@ -26,7 +26,7 @@ infoPageURL = T.pack <$> readEnvString "INFO_PAGE_URL"
 maildir :: (MonadIO m, MonadFail m) => m FilePath
 maildir = readEnvString "MAILDIR"
 
-{-# NOINLINE featureToggle #-}
+{-# INLINEABLE featureToggle #-}
 featureToggle :: (MonadIO m) => String -> m Bool
 featureToggle toggleName = liftIO (parseDevelopmentMode <$> lookupEnv toggleName)
   where
