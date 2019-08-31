@@ -6,7 +6,7 @@ RUN apk --no-cache add \
         tini
 
 COPY dist/unverified-email-api /opt/bin/unverified-email-api
-ENV PORT=80 API_URL="api.unverified.email" INFO_PAGE_URL="unverified.email" MAILDIR="/mailbox/unverified/"
+ENV PORT=80 API_URL="api.unverified.email" INFO_PAGE_URL="https://github.com/ptek/api.unverified.email" MAILDIR="/mailbox/unverified/"
 
 EXPOSE 80/tcp
 
