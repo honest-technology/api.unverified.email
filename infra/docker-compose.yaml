@@ -45,7 +45,7 @@ services:
       - type: volume
         source: mailbox-unverified
         target: /mailbox/unverified/
-        read_only: true
+        read_only: false
         volume:
           nocopy: true
     restart: "always"
