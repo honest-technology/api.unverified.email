@@ -1,5 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 crond
 # shellcheck disable=SC2068
-exec tini -g -- /opt/bin/unverified-email-api ${@}
+exec /opt/bin/unverified-email-api ${@}

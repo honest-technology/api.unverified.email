@@ -13,4 +13,4 @@ COPY dist/unverified-email-api /opt/bin/unverified-email-api
 
 EXPOSE 80/tcp
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["tini", "-g", "--", "/entrypoint.sh"]
