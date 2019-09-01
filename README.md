@@ -30,7 +30,9 @@ it. I will consider carefully if to implement them though :)
   the small kinks together if they appear. Just open an issue please, if
   something needs attention.
 - You can create as many mailboxes as you want.
-- The /receive endpoint will wait for emails to be delivered for at least 15 
+- The mailboxes and your emails will be stored for 5 minutes only, after which
+  They will be deleted. So do use the `/create` endpoint freely.
+- The `/receive` endpoint will wait for emails to be delivered for at least 15 
   seconds, so you should not need to hit the url repeatedly.
 
 ### Developing
