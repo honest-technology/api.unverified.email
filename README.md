@@ -25,7 +25,10 @@ it. I will consider carefully if to implement them though :)
    to receive all the emails that have been sent to that address
   
 #### Notes:
-- *Warning*: the service is not yet finalised. 
+- *Warning*: the service is not yet finalised. However I am very certain
+  it can be used by developers and in your pipelines and we can iron out
+  the small kinks together if they appear. Just open an issue please, if
+  something needs attention.
 - You can create as many mailboxes as you want.
 - The /receive endpoint will wait for emails to be delivered for at least 15 
   seconds, so you should not need to hit the url repeatedly.
