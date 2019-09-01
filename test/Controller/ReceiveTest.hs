@@ -22,7 +22,7 @@ import Test.Hspec.Wai.FeatureToggle
 import Test.Hspec.Wai.ValueMatchers
 
 spec :: SpecWith Application
-spec = before_ cleanMaildir $ do
+spec =  describe "Controller.ReceiveTest" $ before_ cleanMaildir $ do
   withFeatureToggleOn "FEATURE_NO_DELAY" $
     describe "GET /receive" $ do
       it "responds with empty emails for unknown mailbox id" $

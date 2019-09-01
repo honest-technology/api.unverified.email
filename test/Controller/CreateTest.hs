@@ -15,7 +15,7 @@ import           Test.Hspec.Wai.ValueMatchers
 
 
 spec :: SpecWith Application
-spec = before_ cleanMaildir $
+spec = describe "Controller.CreateTest" $ before_ cleanMaildir $
   withFeatureToggleOn "FEATURE_NO_DELAY" $
     describe "GET /create" $
       it "responds with information about a new mailbox" $

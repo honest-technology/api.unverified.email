@@ -9,7 +9,7 @@ import Test.Hspec.Wai
 import qualified Env
 
 spec :: SpecWith Application
-spec =
+spec = describe "Controller.UsageTest" $
   describe "GET /" $ do
     it "responds with usage" $ do
       apiUrl <- Env.apiURL
