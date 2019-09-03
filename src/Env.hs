@@ -2,6 +2,7 @@ module Env
   ( port
   , apiURL
   , infoPageURL
+  , smtpURL
   , maildir
   , featureToggle
   , debugMode
@@ -20,6 +21,9 @@ port = readEnv "PORT"
 
 apiURL :: (MonadIO m, MonadFail m) => m Text
 apiURL = T.pack <$> readEnvString "API_URL"
+
+smtpURL :: (MonadIO m, MonadFail m) => m Text
+smtpURL = T.pack <$> readEnvString "SMTP_URL"
 
 infoPageURL :: (MonadIO m, MonadFail m) => m Text
 infoPageURL = T.pack <$> readEnvString "INFO_PAGE_URL"

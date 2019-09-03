@@ -42,7 +42,7 @@ spec =  describe "Controller.ReceiveTest" $ before_ cleanMaildir $ do
       _ <- get "/receive/unknown-mailbox-id"
       timeFinished <- liftIO getCurrentTime
       (timeFinished `diffUTCTime` timeStart) `shouldSatisfy` (> 15)
-      (timeFinished `diffUTCTime` timeStart) `shouldSatisfy` (< 29)
+      (timeFinished `diffUTCTime` timeStart) `shouldSatisfy` (< 29.5)
 
 cleanMaildir :: IO ()
 cleanMaildir = do

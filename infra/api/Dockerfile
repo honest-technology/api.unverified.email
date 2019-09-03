@@ -6,8 +6,12 @@ RUN apk --no-cache add \
         tini
 
 COPY entrypoint.sh /entrypoint.sh
-ENV PORT=80 API_URL="api.unverified.email" INFO_PAGE_URL="https://github.com/ptek/api.unverified.email" MAILDIR="/mailbox/unverified/"
 RUN echo '* * * * * find ${MAILDIR} -type f -mmin +5 -print | xargs -I{} sh -c "rm -f {}"' >> /etc/crontabs/root
+ENV PORT=80 \
+    API_URL="api.unverified.email" \
+    SMTP_URL="smtp.unverified.email:25" \
+    INFO_PAGE_URL="https://github.com/ptek/api.unverified.email" \
+    MAILDIR="/mailbox/unverified/"
 
 COPY dist/unverified-email-api /opt/bin/unverified-email-api
 

@@ -22,6 +22,7 @@ library
     , Controller.Mailbox
     , Model.Mailbox
     , Model.Email
+    , Model.Usage
     , Env
   build-depends:
       aeson

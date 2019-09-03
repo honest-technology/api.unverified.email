@@ -1,26 +1,12 @@
-module Controller.UsageTest where
+{-# LANGUAGE QuasiQuotes #-}
+module Model.Usage (plainText) where
 
-import Data.String.Interpolate (i)
-import Data.Text
-import Network.Wai (Application)
-import Test.Hspec
-import Test.Hspec.Wai
+import           Data.String.Interpolate (i)
+import           Data.Text               (Text)
+import qualified Data.Text.Lazy          as TL
 
-import qualified Env
-
-spec :: SpecWith Application
-spec = describe "Controller.UsageTest" $
-  describe "GET /" $ do
-    it "responds with usage" $ do
-      apiUrl <- Env.apiURL
-      infoPageUrl <- Env.infoPageURL
-      smtpUrl <- Env.smtpURL
-      get "/" `shouldRespondWith` usage apiUrl infoPageUrl smtpUrl
-    it "has 'Content-Type: text/plain; charset=utf-8'" $
-      get "/" `shouldRespondWith` 200 {matchHeaders = ["Content-Type" <:> "text/plain; charset=utf-8"]}
-
-usage :: Text -> Text -> Text -> ResponseMatcher
-usage apiUrl infoPageUrl smtpUrl = [i|
+plainText :: Text -> Text -> Text -> TL.Text
+plainText apiUrl infoPageUrl smtpUrl = [i|
 
 UNVERIFIED.EMAIL
 a tool that helps testing your emails.
