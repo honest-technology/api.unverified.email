@@ -29,7 +29,7 @@ function _goal_deploy() {
   docker save "${IMAGE_API}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no "${REMOTE}" 'mkdir -p /opt/unverified.email/; bunzip2 | docker load'
 
   envsubst < infra/docker-compose.yaml | ssh -oStrictHostKeyChecking=no "${REMOTE}" "cat > /opt/unverified.email/docker-compose.yaml"
-  ssh -oStrictHostKeyChecking=no "${REMOTE}" 'cd /opt/unverified.email/ && docker-compose up -d --force-recreate'
+  ssh -oStrictHostKeyChecking=no "${REMOTE}" 'cd /opt/unverified.email/ && docker-compose up -d'
 
   sleep 5
   ssh -oStrictHostKeyChecking=no "${REMOTE}" 'docker ps -a'
