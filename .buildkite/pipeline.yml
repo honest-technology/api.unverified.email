@@ -1,24 +1,24 @@
 steps:
-- commands:
+- label: Build and Test
+  commands:
     - ./do test dist
     - rm -rf /tmp/artifacts/unverified.email/*
     - cp ./infra/api/dist/* /tmp/artifacts/unverified.email/
-  label: Build and Test
   plugins:
     - docker#v3.3.0:
         image: "haskell:8.6.5"
         mount-buildkite-agent: false
         volumes:
-          - "${BUILD_CACHE_HASKELL_STACK}:/root/.stack"
-          - "/tmp/artifacts/unverified.email/:/tmp/artifacts/unverified.email/"
+          - "${BUILD_CACHE_HASKELL_STACK}:/root/.stack:delegated"
+          - "/tmp/artifacts/unverified.email/:/tmp/artifacts/unverified.email/:delegated"
 
 - wait
 
-- commands:
+- label: Container Images
+  commands:
     - apk --no-cache add bash tar gzip git
     - mkdir -p ./infra/api/dist && cp /tmp/artifacts/unverified.email/* ./infra/api/dist/
     - ./do containers
-  label: Containers
   plugins:
     - docker#v3.3.0:
         image: "docker:latest"
@@ -26,10 +26,10 @@ steps:
         privileged: true
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
-          - "/tmp/artifacts/unverified.email/:/tmp/artifacts/unverified.email/"
+          - "/tmp/artifacts/unverified.email/:/tmp/artifacts/unverified.email/:ro"
 
 - wait
 
-- commands:
+- label: Publish
+  commands:
     - ./do deploy
-  label: Deploy
