@@ -74,7 +74,7 @@ job "unverified-email" {
             type = "volume"
             target = "/mailbox/unverified/"
             source = "mailbox-unverified"
-            readonly = true
+            readonly = false
           }
         ]
         labels = {

@@ -38,6 +38,9 @@ function _goal_deploy() {
     chmod 700 /opt/unverified.email/traefik/letsencrypt/ && \
     chmod 600 /opt/unverified.email/traefik/letsencrypt/* && \
     nomad job run -verbose /opt/unverified.email/nomad-definitions.hcl'
+
+  sleep 5
+  ${SSH} "nomad deployment list -json | jq -r '.[0] .ID' | xargs nomad deployment status -json | jq '.Status'"
 }
 
 function _goal_linter-sh() {
