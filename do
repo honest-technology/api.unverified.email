@@ -1,7 +1,8 @@
 #!/bin/bash
 
 set -o pipefail
-set -eu
+set -e
+set -u
 
 source infra/variables.sh
 
@@ -28,11 +29,18 @@ function _goal_deploy() {
   docker save "${IMAGE_SMTPD}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no "${REMOTE}" 'mkdir -p /opt/unverified.email/; bunzip2 | docker load'
   docker save "${IMAGE_API}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no "${REMOTE}" 'mkdir -p /opt/unverified.email/; bunzip2 | docker load'
 
-  envsubst < infra/docker-compose.yaml | ssh -oStrictHostKeyChecking=no "${REMOTE}" "cat > /opt/unverified.email/docker-compose.yaml"
-  ssh -oStrictHostKeyChecking=no "${REMOTE}" 'cd /opt/unverified.email/ && docker-compose up -d'
+  #envsubst < infra/docker-compose.yaml | ssh -oStrictHostKeyChecking=no "${REMOTE}" "cat > /opt/unverified.email/docker-compose.yaml"
+  #ssh -oStrictHostKeyChecking=no "${REMOTE}" 'cd /opt/unverified.email/ && docker-compose up -d'
+
+  envsubst < infra/nomad-definitions.hcl | ssh -oStrictHostKeyChecking=no "${REMOTE}" "cat > /opt/unverified.email/nomad-definitions.hcl"
+  ssh -oStrictHostKeyChecking=no "${REMOTE}" '\
+    mkdir -p /opt/unverified.email/traefik/letsencrypt/ && \
+    chmod 700 /opt/unverified.email/traefik/letsencrypt/ && \
+    nomad job run /opt/unverified.email/nomad-definitions.hcl'
 
   sleep 5
-  ssh -oStrictHostKeyChecking=no "${REMOTE}" 'docker ps -a'
+  ssh -oStrictHostKeyChecking=no "${REMOTE}" '(nomad status unverified-email | grep -E "Status\s+= running" > /dev/null && echo "OK") || (nomad status unverified-email; exit 1)'
+  #ssh -oStrictHostKeyChecking=no "${REMOTE}" 'docker ps -a'
 }
 
 function _goal_linter-sh() {
