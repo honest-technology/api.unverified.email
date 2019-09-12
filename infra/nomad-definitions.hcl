@@ -13,22 +13,21 @@ job "unverified-email" {
 
   group "cluster-1" {
 
-    task "reverse-proxy-1" {
+    task "traefik" {
       driver = "docker"
 
       config {
         image = "traefik:v2.0"
         args = [
+          "--global.sendanonymoususage=false",
           "--api=true",
-          "--providers.docker=true",
           "--providers.docker.exposedbydefault=false",
-          "--entrypoints.web=true",
-          "--entrypoints.web.address=':80'",
+          "--entrypoints.web.address=:80",
           "--entrypoints.websecure=true",
-          "--entrypoints.websecure.address=':443'",
+          "--entrypoints.websecure.address=:443",
           "--certificatesresolvers.challenge=true",
-          "--certificatesresolvers.challenge.acme.email='pavlo@kerestey.net'",
-          "--certificatesresolvers.challenge.acme.storage='/letsencrypt/acme.json'",
+          "--certificatesresolvers.challenge.acme.email=pavlo@kerestey.net",
+          "--certificatesresolvers.challenge.acme.storage=/letsencrypt/acme.json",
           "--certificatesresolvers.challenge.acme.httpchallenge=true",
           "--certificatesresolvers.challenge.acme.httpchallenge.entryPoint=web",
         ]
@@ -41,8 +40,8 @@ job "unverified-email" {
           },
           {
             type = "bind"
-            target = "/letsencrypt/"
-            source = "/opt/unverified.email/traefik/letsencrypt/"
+            target = "/letsencrypt"
+            source = "/opt/unverified.email/traefik/letsencrypt"
             readonly = false
           }
         ]
@@ -90,16 +89,6 @@ job "unverified-email" {
         network {
           port "http" {}
         }
-      }
-
-      service {
-        port = "http"
-        tags = [
-          "traefik.enable=true",
-          "traefik.http.routers.api-1.rule=Host(`api.unverified.email`)",
-          "traefik.http.routers.api-1.entrypoints=websecure",
-          "traefik.http.routers.api-1.tls.certresolver=challenge"
-        ]
       }
     }
 
