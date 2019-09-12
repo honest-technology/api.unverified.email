@@ -29,6 +29,7 @@ function _goal_deploy() {
   docker save "${IMAGE_SMTPD}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no "${REMOTE}" 'bunzip2 | docker load'
   docker save "${IMAGE_API}" | bzip2 -9 | ssh -oStrictHostKeyChecking=no "${REMOTE}" 'bunzip2 | docker load'
 
+  sh -oStrictHostKeyChecking=no "${REMOTE}" 'mkdir -p /opt/unverified.email/'
   envsubst < infra/nomad-definitions.hcl | ssh -oStrictHostKeyChecking=no "${REMOTE}" '
     cat > /opt/unverified.email/nomad-definitions.hcl && \
     mkdir -p /opt/unverified.email/traefik/letsencrypt/ && \
