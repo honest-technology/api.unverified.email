@@ -1,7 +1,7 @@
 name:                unverified-email-api
 version:             0.1.0.0
 homepage:            https://github.com/ptek/unverified.email
-license:             AGPL
+license:             BSD3
 license-file:        LICENSE
 author:              Pavlo Kerestey
 maintainer:          pavlo {at} kerestey.net
