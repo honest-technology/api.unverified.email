@@ -1,4 +1,4 @@
-FROM frolvlad/alpine-glibc:latest
+FROM frolvlad/alpine-glibc:alpine-3.11_glibc-2.30
 
 RUN apk --no-cache add \
         ca-certificates \
