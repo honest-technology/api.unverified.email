@@ -16,5 +16,3 @@ EXPOSE 25/tcp
 
 ENTRYPOINT ["tini", "-g", "--"]
 CMD ["/usr/sbin/smtpd", "-d"]
-
-
