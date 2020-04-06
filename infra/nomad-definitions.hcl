@@ -17,11 +17,14 @@ job "unverified-email" {
       driver = "docker"
 
       config {
-        image = "traefik:v2.0"
+        image = "traefik:v2.2"
         args = [
           "--global.sendanonymoususage=false",
           "--api=true",
           "--providers.docker.exposedbydefault=false",
+          "--entryPoints.metrics.address=:8081",
+          "--metrics.prometheus=true",
+          "--metrics.prometheus.entryPoint=metrics",
           "--entrypoints.web.address=:80",
           "--entrypoints.websecure=true",
           "--entrypoints.websecure.address=:443",
