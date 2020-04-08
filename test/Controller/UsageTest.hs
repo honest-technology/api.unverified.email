@@ -41,19 +41,19 @@ by downloading them through the api.
 2.b Alternatively, you can include the mailbox_id in any
    other place in your email (subject, headers if you have access to
    them, or even in the body), and send the email to test@unverified.email
-   to be able to recieve it later through api.
+   to be able to receive it later through api.
 2.c You could also set #{smtpUrl} as your smtp
    server for testing and dev environment, and send your emails to the
    real addresses you actually intended. unverified.email will catch all
    email, storing it for you to fetch via api.
 
-3. Verify the emails in your test, by making another GEt request to:
+3. Verify the emails in your test, by making another GET request to:
    https://#{apiUrl}/receive/<mailbox_id>
    where <mailbox_id> is the one from the creation step.
    The creation step actually includes the receive url, so you don't need
    to concatenate anything in your code.
    unverified.email will answer with a list of all the emails, including the
-   To, From, and Subject fields, as well as the raw source of theemail body
+   To, From, and Subject fields, as well as the raw source of the email body
    for you to parse :)
 
 # There are few notes though:
