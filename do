@@ -10,14 +10,27 @@ function _goal_build() {
   stack build
 }
 
+function _goal_build_in_docker() {
+  docker_stack build
+}
+
 function _goal_test() {
   stack test
 }
 
+function docker_stack {
+  docker run -v "$(pwd):$(pwd)" -v ${HOME}/.stack:/root/.stack --workdir "$(pwd)" haskell:8.6.5 stack --system-ghc "$@"
+}
+
 function _goal_dist() {
   mkdir -p ./infra/api/dist/ && rm -rf ./infra/api/dist/*
-  cp "$(stack path --local-install-root)/bin/unverified-email-api" "./infra/api/dist/"
-  strip ./infra/api/dist/*
+  if [ "$(uname)" = "Linux" ]; then
+    _goal_build
+    cp "$(stack path --local-install-root)/bin/unverified-email-api" "./infra/api/dist/"
+  else
+    _goal_build_in_docker
+    cp "$(docker_stack path --local-install-root)/bin/unverified-email-api" "./infra/api/dist/"
+  fi
 }
 
 function _goal_containers() {
@@ -77,8 +90,7 @@ EOHELP
 }
 
 set +u
-# shellcheck disable=SC2198
-if [ -z "${@}" ]; then _goal_help; fi
+[[ -z "${*}" ]] && _goal_help
 set -u
 for target in "${@}"
 do
