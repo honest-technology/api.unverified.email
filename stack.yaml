@@ -2,5 +2,7 @@ resolver: lts-14.27
 packages:
 - .
 extra-deps:
-  - scotty-tls-0.4.1
-  - string-convert-4.0.0.1
+- scotty-tls-0.4.1@sha256:3eea55183b06e48f3c8407131ebd79d70515a2bd1825d5334f76eeace95f8f69,1000
+- string-convert-4.0.0.1@sha256:601a753c3761a4e41bf5944236a811ea133e5abef3502ecc49e2ee2e8834acbd,1271
+- prometheus-metrics-ghc-1.0.1@sha256:d12cd520cbedff91bd193e0192056474723e953e69cdf817fb79494d110df390,1231
+- wai-middleware-prometheus-1.0.0@sha256:1625792914fb2139f005685be8ce519111451cfb854816e430fbf54af46238b4,1314

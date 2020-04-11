@@ -31,6 +31,8 @@ library
     , directory
     , envy
     , load-env
+    , prometheus-client
+    , prometheus-metrics-ghc
     , protolude
     , retry
     , scotty
@@ -44,6 +46,7 @@ library
     , uuid
     , wai
     , wai-extra
+    , wai-middleware-prometheus
   default-extensions:
       DeriveFoldable
     , DeriveFunctor

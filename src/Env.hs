@@ -1,5 +1,6 @@
 module Env
   ( port
+  , prometheusPort
   , apiURL
   , infoPageURL
   , smtpURL
@@ -18,6 +19,9 @@ import           Text.Read              (readEither)
 
 port :: (MonadIO m, MonadFail m) => m Int
 port = readEnv "PORT"
+
+prometheusPort :: (MonadIO m, MonadFail m) => m Int
+prometheusPort = readEnv "PORT_PROMETHEUS"
 
 apiURL :: (MonadIO m, MonadFail m) => m Text
 apiURL = T.pack <$> readEnvString "API_URL"

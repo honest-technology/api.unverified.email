@@ -34,17 +34,19 @@ function _goal_dist() {
 }
 
 function _goal_containers() {
-  docker build infra/smtpd -t "${IMAGE_SMTPD}"
-  docker build infra/api -t "${IMAGE_API}"
+  docker build infra/smtpd -t "${ENVSUBST_IMAGE_SMTPD}"
+  docker build infra/api -t "${ENVSUBST_IMAGE_API}"
 }
 
 function _goal_deploy() {
   SSH="ssh -oStrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${REMOTE}"
-  docker save "${IMAGE_SMTPD}" | bzip2 -9 | ${SSH} 'bunzip2 | docker load'
-  docker save "${IMAGE_API}" | bzip2 -9 | ${SSH} 'bunzip2 | docker load'
+  docker save "${ENVSUBST_IMAGE_SMTPD}" | bzip2 -9 | ${SSH} 'bunzip2 | docker load'
+  docker save "${ENVSUBST_IMAGE_API}" | bzip2 -9 | ${SSH} 'bunzip2 | docker load'
 
   ${SSH} 'mkdir -p /opt/unverified.email/'
-  envsubst < infra/nomad-definitions.hcl | ${SSH} \
+  local envs_to_substitute
+  envs_to_substitute=$(set | grep ENVSUBST_ | awk -F'[=]' '{ print "$" $1 }')
+  envsubst "${envs_to_substitute}" < infra/nomad-definitions.hcl | ${SSH} \
     'cat > /opt/unverified.email/nomad-definitions.hcl && '\
     'mkdir -p /opt/unverified.email/traefik/letsencrypt/ && '\
     'touch /opt/unverified.email/traefik/letsencrypt/acme.json && '\

@@ -10,14 +10,28 @@ packages:
       size: 368
       sha256: 2bbffe0e99ff20397aa51bfc4f26be862228475d0c37c67e3c9d2cc66ecc291b
   original:
-    hackage: scotty-tls-0.4.1
+    hackage: scotty-tls-0.4.1@sha256:3eea55183b06e48f3c8407131ebd79d70515a2bd1825d5334f76eeace95f8f69,1000
 - completed:
     hackage: string-convert-4.0.0.1@sha256:601a753c3761a4e41bf5944236a811ea133e5abef3502ecc49e2ee2e8834acbd,1271
     pantry-tree:
       size: 272
       sha256: 0129a62702eed8ca29da70f1714f140f3ea7cf0e59579bd92993da8c27199ecb
   original:
-    hackage: string-convert-4.0.0.1
+    hackage: string-convert-4.0.0.1@sha256:601a753c3761a4e41bf5944236a811ea133e5abef3502ecc49e2ee2e8834acbd,1271
+- completed:
+    hackage: prometheus-metrics-ghc-1.0.1@sha256:d12cd520cbedff91bd193e0192056474723e953e69cdf817fb79494d110df390,1231
+    pantry-tree:
+      size: 293
+      sha256: b412f2835ee5791a7f4f634c416227b70bae50511666d9f68683e5e21b5c2821
+  original:
+    hackage: prometheus-metrics-ghc-1.0.1@sha256:d12cd520cbedff91bd193e0192056474723e953e69cdf817fb79494d110df390,1231
+- completed:
+    hackage: wai-middleware-prometheus-1.0.0@sha256:1625792914fb2139f005685be8ce519111451cfb854816e430fbf54af46238b4,1314
+    pantry-tree:
+      size: 307
+      sha256: 6d64803c639ed4c7204ea6fab0536b97d3ee16cdecb9b4a883cd8e56d3c61402
+  original:
+    hackage: wai-middleware-prometheus-1.0.0@sha256:1625792914fb2139f005685be8ce519111451cfb854816e430fbf54af46238b4,1314
 snapshots:
 - completed:
     size: 524996

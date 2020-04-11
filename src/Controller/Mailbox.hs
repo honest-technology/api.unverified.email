@@ -2,15 +2,16 @@ module Controller.Mailbox (
   controller
 ) where
 
-import Web.Scotty (ScottyM, get, param)
-import Protolude hiding (get)
+import           Web.Scotty (ScottyM, get, param)
+import qualified Prometheus
+import           Protolude hiding (get)
 
 import qualified Action.Create
 import qualified Action.Usage
 import qualified Action.Receive
 
-controller :: ScottyM ()
-controller = do
+controller :: Prometheus.Counter -> ScottyM ()
+controller metricMailboxCreations = do
     get "/" Action.Usage.usage
-    get "/create" Action.Create.createMailbox
+    get "/create" (Action.Create.createMailbox metricMailboxCreations)
     get "/receive/:mailboxId" (param "mailboxId" >>= Action.Receive.receiveMailbox)

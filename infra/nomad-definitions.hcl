@@ -11,7 +11,7 @@ job "unverified-email" {
     canary = 0
   }
 
-  group "cluster-1" {
+  group "services" {
 
     task "traefik" {
       driver = "docker"
@@ -21,13 +21,17 @@ job "unverified-email" {
         args = [
           "--global.sendanonymoususage=false",
           "--api=true",
+          "--api.insecure=true",
+          "--accesslog=true",
+
           "--providers.docker.exposedbydefault=false",
-          "--entryPoints.metrics.address=:8081",
           "--metrics.prometheus=true",
-          "--metrics.prometheus.entryPoint=metrics",
-          "--entrypoints.web.address=:80",
-          "--entrypoints.websecure=true",
-          "--entrypoints.websecure.address=:443",
+          "--metrics.prometheus.entryPoint=metrics-traefik",
+          "--entryPoints.web.address=:80",
+          "--entryPoints.websecure.address=:443",
+          "--entryPoints.metrics-api.address=:8081",
+          "--entryPoints.metrics-traefik.address=:8082",
+
           "--certificatesresolvers.challenge=true",
           "--certificatesresolvers.challenge.acme.email=pavlo@kerestey.net",
           "--certificatesresolvers.challenge.acme.storage=/letsencrypt/acme.json",
@@ -53,25 +57,21 @@ job "unverified-email" {
 
       resources {
         network {
-          port "http" {
-            static = 80
-          }
-          port "https" {
-            static = 443
-          }
+          port "http" { static = "1080" }
+          port "https" { static = "1443" }
+          port "traefik_api" { static = "8080" }
+          port "metrics_api" { static = "8081" }
+          port "metrics_traefik" { static = "8082" }
         }
       }
     }
 
-    task "api-1" {
+    task "api" {
       driver = "docker"
 
       config {
-        image = "${IMAGE_API}"
+        image = "${ENVSUBST_IMAGE_API}"
         force_pull = "false"
-        port_map {
-          http = 80
-        }
         mounts = [
           {
             type = "volume"
@@ -82,15 +82,35 @@ job "unverified-email" {
         ]
         labels = {
           "traefik.enable" = "true",
-          "traefik.http.routers.api-1.rule" = "Host(`api.unverified.email`)",
-          "traefik.http.routers.api-1.entrypoints" = "websecure",
-          "traefik.http.routers.api-1.tls.certresolver" = "challenge"
+
+          "traefik.http.routers.api.service"="api",
+          "traefik.http.routers.api.rule" = "Host(`api.unverified.email`)",
+          "traefik.http.routers.api.entrypoints" = "web",
+          "traefik.http.routers.api.tls"="true",
+          "traefik.http.routers.api.tls.domains[0].main" = "api.unverified.email",
+          "traefik.http.routers.api.tls.certresolver" = "challenge",
+
+          "traefik.http.routers.metrics-api.service"="metrics-api",
+          "traefik.http.routers.metrics-api.rule" = "Host(`api.unverified.email`)",
+          "traefik.http.routers.metrics-api.entrypoints" = "metrics-api",
+          "traefik.http.routers.metrics-api.tls"="true",
+          "traefik.http.routers.metrics-api.tls.domains[0].main" = "api.unverified.email",
+          "traefik.http.routers.metrics-api.tls.certresolver" = "challenge",
+
+          "traefik.http.services.api.loadBalancer.server.port" = "80",
+          "traefik.http.services.metrics-api.loadBalancer.server.port" = "8081",
+        }
+        network_mode = "bridge"
+        port_map {
+          http = 80
+          metrics = 8081
         }
       }
 
       resources {
         network {
           port "http" {}
+          port "metrics" {}
         }
       }
     }
@@ -99,7 +119,7 @@ job "unverified-email" {
       driver = "docker"
 
       config {
-        image = "${IMAGE_SMTPD}"
+        image = "${ENVSUBST_IMAGE_SMTPD}"
         network_mode = "host"
         force_pull = "false"
         mounts = [
