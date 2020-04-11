@@ -11,7 +11,7 @@ job "unverified-email" {
     canary = 0
   }
 
-  group "services" {
+  group "traefik" {
 
     task "traefik" {
       driver = "docker"
@@ -66,6 +66,10 @@ job "unverified-email" {
         }
       }
     }
+
+  }
+
+  group "services" {
 
     task "api" {
       driver = "docker"
