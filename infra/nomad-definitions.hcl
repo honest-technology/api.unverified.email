@@ -96,7 +96,6 @@ job "unverified-email" {
           "traefik.http.routers.metrics-api.service"="metrics-api",
           "traefik.http.routers.metrics-api.rule" = "Host(`api.unverified.email`)",
           "traefik.http.routers.metrics-api.entrypoints" = "metrics-api",
-          "traefik.http.routers.metrics-api.tls.certresolver" = "challenge",
 
           "traefik.http.services.api.loadBalancer.server.port" = "80",
           "traefik.http.services.metrics-api.loadBalancer.server.port" = "8081",
