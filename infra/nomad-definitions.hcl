@@ -23,6 +23,7 @@ job "unverified-email" {
           "--api=true",
           "--api.insecure=true",
           "--accesslog=true",
+          "--log.level=DEBUG",
 
           "--providers.docker.exposedbydefault=false",
           "--metrics.prometheus=true",
@@ -57,8 +58,8 @@ job "unverified-email" {
 
       resources {
         network {
-          port "http" { static = "1080" }
-          port "https" { static = "1443" }
+          port "http" { static = "80" }
+          port "https" { static = "443" }
           port "traefik_api" { static = "8080" }
           port "metrics_api" { static = "8081" }
           port "metrics_traefik" { static = "8082" }
@@ -86,15 +87,11 @@ job "unverified-email" {
           "traefik.http.routers.api.service"="api",
           "traefik.http.routers.api.rule" = "Host(`api.unverified.email`)",
           "traefik.http.routers.api.entrypoints" = "web",
-          "traefik.http.routers.api.tls"="true",
-          "traefik.http.routers.api.tls.domains[0].main" = "api.unverified.email",
           "traefik.http.routers.api.tls.certresolver" = "challenge",
 
           "traefik.http.routers.metrics-api.service"="metrics-api",
           "traefik.http.routers.metrics-api.rule" = "Host(`api.unverified.email`)",
           "traefik.http.routers.metrics-api.entrypoints" = "metrics-api",
-          "traefik.http.routers.metrics-api.tls"="true",
-          "traefik.http.routers.metrics-api.tls.domains[0].main" = "api.unverified.email",
           "traefik.http.routers.metrics-api.tls.certresolver" = "challenge",
 
           "traefik.http.services.api.loadBalancer.server.port" = "80",
