@@ -23,7 +23,7 @@ job "unverified-email" {
           "--api=true",
           "--api.insecure=true",
           "--accesslog=true",
-          "--log.level=DEBUG",
+          # "--log.level=DEBUG",
 
           "--providers.docker.exposedbydefault=false",
           "--metrics.prometheus=true",
