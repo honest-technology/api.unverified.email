@@ -86,7 +86,7 @@ job "unverified-email" {
 
           "traefik.http.routers.api.service"="api",
           "traefik.http.routers.api.rule" = "Host(`api.unverified.email`)",
-          "traefik.http.routers.api.entrypoints" = "web",
+          "traefik.http.routers.api.entrypoints" = "websecure",
           "traefik.http.routers.api.tls.certresolver" = "challenge",
 
           "traefik.http.routers.metrics-api.service"="metrics-api",
